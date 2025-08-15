@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>For Ammu 💜</title>
+    <style>
+      :root {
+        --purple1: #6a0dad;
+        --purple2: #b388eb;
+        --bg1: linear-gradient(135deg, #2c024c 0%, #6a0dad 50%, #b388eb 100%);
+        --card: rgba(255, 255, 255, 0.06);
+        --glass: rgba(255, 255, 255, 0.06);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+      }
+      body {
+        background: var(--bg1);
+        overflow: hidden;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* START SCREEN */
+      #start {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        backdrop-filter: blur(4px);
+      }
+      #startCard {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+        padding: 28px;
+        border-radius: 18px;
+        text-align: center;
+        width: 92%;
+        max-width: 420px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        transform: translateY(0);
+        animation: pop 800ms cubic-bezier(0.2, 0.9, 0.3, 1);
+      }
+      #startCard h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        letter-spacing: 0.6px;
+      }
+      #startCard p {
+        margin: 0 0 14px;
+        opacity: 0.9;
+      }
+      #goBtn {
+        background: #fff;
+        color: var(--purple1);
+        border: 0;
+        padding: 12px 20px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      @keyframes pop {
+        from {
+          transform: translateY(12px) scale(0.98);
+          opacity: 0;
+        }
+        to {
+          transform: none;
+          opacity: 1;
+        }
+      }
+
+      /* MAIN STAGE */
+      #stage {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* big name */
+      .titleWrap {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        z-index: 30;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        pointer-events: none;
+      }
+      .title {
+        font-size: 34px;
+        font-weight: 700;
+        text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .subtitle {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-top: 4px;
+        display: block;
+        font-weight: 500;
+        color: #ffe;
+      }
+
+      /* picture stage / slideshow */
+      .frame {
+        width: min(880px, 92%);
+        height: min(560px, 76%);
+        border-radius: 18px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.02)
+        );
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0.98);
+        transition: opacity 0.9s ease, transform 0.9s ease;
+        padding: 12px;
+      }
+      .slide.show {
+        opacity: 1;
+        transform: scale(1);
+        z-index: 10;
+      }
+
+      .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        border: 6px solid rgba(255, 255, 255, 0.03);
+      }
+
+      /* photo thumbnails bottom */
+      .thumbs {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 40;
+        padding: 6px 12px;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.2),
+          rgba(255, 255, 255, 0.02)
+        );
+        border-radius: 999px;
+      }
+      .thumbs img {
+        width: 56px;
+        height: 36px;
+        object-fit: cover;
+        border-radius: 8px;
+        opacity: 0.8;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        transition: transform 0.18s, opacity 0.18s;
+      }
+      .thumbs img:hover {
+        transform: translateY(-6px);
+        opacity: 1;
+      }
+
+      /* pop messages / typed */
+      .messageBox {
+        position: absolute;
+        right: 26px;
+        top: 120px;
+        width: 260px;
+        z-index: 40;
+        text-align: left;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.02)
+        );
+        padding: 14px;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .bubble {
+        margin-bottom: 10px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.6s ease;
+      }
+      .bubble.show {
+        opacity: 1;
+        transform: none;
+      }
+      .bubble p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.25;
+      }
+
+      /* hearts + particles */
+      .particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 5;
+      }
+      .heart {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0;
+        animation: heartPop 1.2s forwards;
+      }
+      @keyframes heartPop {
+        0% {
+          transform: translateY(0) scale(0.2);
+          opacity: 0;
+        }
+        40% {
+          transform: translateY(-18px) scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-120px) scale(0.9);
+          opacity: 0;
+        }
+      }
+
+      /* footer / controls */
+      .controls {
+        position: absolute;
+        left: 20px;
+        bottom: 18px;
+        z-index: 40;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .controlBtn {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 0;
+        cursor: pointer;
+      }
+
+      /* small responsive */
+      @media (max-width: 600px) {
+        .title {
+          font-size: 22px;
+        }
+        .messageBox {
+          display: none;
+        }
+        .frame {
+          height: 64vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- START overlay (tap to enable audio) -->
+    <div id="start">
+      <div id="startCard">
+        <h1>For my Ammadi💜</h1>
+        <p></p>
+        <button id="goBtn">Tap to Start & Play</button>
+      </div>
+    </div>
+
+    <!-- MAIN stage -->
+    <div id="stage">
+      <div class="titleWrap">
+        <div class="title">
+          <span style="font-size: 20px; opacity: 0.95">Miss you diii</span>
+          <span
+            style="
+              font-size: 34px;
+              color: #fff;
+              text-shadow: 0 10px 30px rgba(106, 13, 173, 0.45);
+            "
+            >🫂🫂🫂💋</span
+          >
+        </div>
+        <div style="display: block; margin-left: 12px">
+          <span class="subtitle"></span>
+        </div>
+      </div>
+
+      <div class="frame" id="frame">
+  <!-- SLIDES -->
+  <div class="slide show">
+    <img src="A1.jpg" alt="img1" />
+  </div>
+  <div class="slide">
+    <img src="A2.jpg" alt="img2" />
+  </div>
+  <div class="slide">
+    <img src="/images/A3.jpg" alt="img3" />
+  </div>
+  <div class="slide">
+    <img src="A4.jpg" alt="img4" />
+  </div>
+  <div class="slide">
+    <img src="A5.jpg" alt="img5" />
+  </div>
+  <div class="slide">
+    <img src="A6.jpg" alt="img6" />
+  </div>
+  <div class="slide">
+    <img src="A7.jpg" alt="img7" />
+  </div>
+  <div class="slide">
+    <img src="A8.jpg" alt="img8" />
+  </div>
+  <div class="slide">
+    <img src="A9.jpg" alt="img9" />
+  </div>
+  <div class="slide">
+    <img src="A10.jpg" alt="img10" />
+  </div>
+  <div class="slide">
+    <img src="A11.jpg" alt="img11" />
+  </div>
+  <div class="slide">
+    <img src="A12.jpg" alt="img12" />
+  </div>
+  <div class="slide">
+    <img src="A13.jpg" alt="img13" />
+  </div>
+  <div class="slide">
+    <img src="A14.jpg" alt="img14" />
+  </div>
+  <div class="slide">
+    <img src="A15.jpg" alt="img15" />
+  </div>
+
+  <!-- THUMBS -->
+  <div class="thumbs" id="thumbs">
+    <img data-index="0" src="A1.jpg" alt="t1" />
+    <img data-index="1" src="A2.jpg" alt="t2" />
+    <img data-index="2" src="A3.jpg" alt="t3" />
+    <img data-index="3" src="A4.jpg" alt="t4" />
+    <img data-index="4" src="A5.jpg" alt="t5" />
+    <img data-index="5" src="A6.jpg" alt="t6" />
+    <img data-index="6" src="A7.jpg" alt="t7" />
+    <img data-index="7" src="A8.jpg" alt="t8" />
+    <img data-index="8" src="A9.jpg" alt="t9" />
+    <img data-index="9" src="A10.jpg" alt="t10" />
+    <img data-index="10" src="A11.jpg" alt="t11" />
+    <img data-index="11" src="A12.jpg" alt="t12" />
+    <img data-index="12" src="A13.jpg" alt="t13" />
+    <img data-index="13" src="A14.jpg" alt="t14" />
+    <img data-index="14" src="A15.jpg" alt="t15" />
+  </div>
+</div>
+
+        <!-- typed messages -->
+        <div class="messageBox" id="messages">
+          <div class="bubble" id="b1">
+            <p>
+              <strong>Hey Ammu</strong> — I see how hard you're studying from
+              4:30. I'm proud of you.
+            </p>
+          </div>
+          <div class="bubble" id="b2">
+            <p>
+              Take short breaks and smile a little — that smile is everything to
+              me.
+            </p>
+          </div>
+          <div class="bubble" id="b3">
+            <p>
+              I can't be there right now, but everything I do is to build our
+              future. Miss you today more than usual.
+            </p>
+          </div>
+          <div class="bubble" id="b4">
+            <p>
+              Tap any picture to pause or skip. Sending a million tiny hugs 🤗💋
+            </p>
+          </div>
+        </div>
+
+        <!-- particles container -->
+        <div class="particles" id="particles"></div>
+      </div>
+      <!--/.frame-->
+
+      <!-- controls -->
+      <div class="controls">
+        <button id="prev" class="controlBtn">Prev</button>
+        <button id="playPause" class="controlBtn">Pause</button>
+        <button id="next" class="controlBtn">Next</button>
+      </div>
+
+      <!-- audio (replace with your own warm voice track if you want) -->
+      <audio id="bgm" loop>
+        <!-- Replace the src below with your own MP3 file URL or a voice note url that says "I'm always with you" -->
+        <source
+          src="WhatsApp Audio 2025-08-15 at 13.38.57_a215351e.mp3"
+          type="audio/mpeg"
+        />
+        <!-- If you prefer to not include audio, remove the <audio> element -->
+      </audio>
+    </div>
+
+    <script>
+      (function () {
+        // Elements
+        const start = document.getElementById("start");
+        const goBtn = document.getElementById("goBtn");
+        const stage = document.getElementById("stage");
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const thumbs = document.getElementById("thumbs");
+        const thumbsImgs = Array.from(thumbs.querySelectorAll("img"));
+        const prevBtn = document.getElementById("prev");
+        const nextBtn = document.getElementById("next");
+        const playPause = document.getElementById("playPause");
+        const bubbles = Array.from(document.querySelectorAll(".bubble"));
+        const particles = document.getElementById("particles");
+        const audio = document.getElementById("bgm");
+
+        let index = 0,
+          playing = true,
+          interval = null;
+
+        // Start experience after user taps (ensures audio can play)
+        goBtn.addEventListener("click", startShow);
+        function startShow() {
+          start.style.display = "none";
+          stage.style.display = "flex";
+          // try to play audio; if blocked, ignore
+          audio.play().catch(() => {
+            /* auto-play blocked; audio will start when user interacts */
+          });
+          startAutoSlide();
+          showBubblesSequence();
+          spawnHeartsPeriodically();
+        }
+
+        // slideshow
+        function showSlide(i) {
+          slides.forEach((s, idx) => s.classList.toggle("show", idx === i));
+          index = (i + slides.length) % slides.length;
+        }
+
+        function next() {
+          showSlide(index + 1);
+        }
+        function prev() {
+          showSlide(index - 1);
+        }
+
+        // auto play
+        function startAutoSlide() {
+          clearInterval(interval);
+          interval = setInterval(() => {
+            if (playing) next();
+          }, 4200);
+          playPause.textContent = "Pause";
+          playing = true;
+        }
+        function togglePlay() {
+          playing = !playing;
+          playPause.textContent = playing ? "Pause" : "Play";
+          // if paused, stop audio too
+          if (!playing) audio.pause();
+          else audio.play().catch(() => {});
+        }
+
+        // event listeners
+        nextBtn.addEventListener("click", () => {
+          next();
+          resetAutoSlide();
+        });
+        prevBtn.addEventListener("click", () => {
+          prev();
+          resetAutoSlide();
+        });
+        playPause.addEventListener("click", () => {
+          togglePlay();
+        });
+
+        thumbsImgs.forEach((img) => {
+          img.addEventListener("click", (e) => {
+            const i = parseInt(e.currentTarget.dataset.index, 10);
+            showSlide(i);
+            resetAutoSlide();
+          });
+        });
+
+        function resetAutoSlide() {
+          clearInterval(interval);
+          // resume after small delay
+          setTimeout(() => {
+            startAutoSlide();
+          }, 2500);
+        }
+
+        // show typed/pop-up bubbles one by one
+        function showBubblesSequence() {
+          bubbles.forEach((b) => b.classList.remove("show"));
+          bubbles.forEach((b, idx) => {
+            setTimeout(() => b.classList.add("show"), idx * 2200 + 800);
+          });
+          // loop the bubbles
+          setInterval(() => {
+            bubbles.forEach((b) => b.classList.remove("show"));
+            bubbles.forEach((b, idx) => {
+              setTimeout(() => b.classList.add("show"), idx * 2200 + 800);
+            });
+          }, bubbles.length * 2200 + 3000);
+        }
+
+        // particle hearts (random positions)
+        function spawnHeart(x = null, y = null) {
+          const heart = document.createElement("div");
+          heart.className = "heart";
+          // simple heart using emoji inside div (or use svg)
+          heart.innerHTML = "💜";
+          // random position if not provided
+          const left = x !== null ? x : 10 + Math.random() * 80;
+          const top = y !== null ? y : 70 + Math.random() * 40;
+          heart.style.left = left + "%";
+          heart.style.top = top + "%";
+          // size random
+          const s = 18 + Math.random() * 24;
+          heart.style.fontSize = s + "px";
+          particles.appendChild(heart);
+          // remove after animation
+          setTimeout(() => heart.remove(), 1400);
+        }
+        function spawnHeartsPeriodically() {
+          spawnHeart(60, 50);
+          const t = setInterval(() => {
+            spawnHeart();
+            // stop eventually? we'll keep it subtle
+          }, 900);
+        }
+
+        // small interaction: click frame to create a heart and advance slide
+        document.getElementById("frame").addEventListener("click", (e) => {
+          // spawn at click position
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          spawnHeart(x, y);
+          next();
+          // ensure audio plays if paused
+          audio.play().catch(() => {});
+        });
+
+        // initial set
+        showSlide(0);
+        // allow keyboard arrows (desktop)
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowRight") {
+            next();
+            resetAutoSlide();
+          }
+          if (e.key === "ArrowLeft") {
+            prev();
+            resetAutoSlide();
+          }
+          if (e.key === " ") {
+            togglePlay();
+          }
+        });
+
+        // helpful tip: if audio is present but not playing, clicking anywhere should start it
+        document.addEventListener("click", () => {
+          if (
+            audio &&
+            audio.paused &&
+            stage.style.display === "flex" &&
+            playing
+          ) {
+            audio.play().catch(() => {});
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
